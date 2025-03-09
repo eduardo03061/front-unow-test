@@ -20,17 +20,17 @@ export default function Register() {
     getAllWorkStations();
   }, []);
 
-  const submitEmployee = async (e) => {
+  const submitEmployee = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const data = {
-      name: form[0].value,
-      lastName: form[1].value,
-      email: form[2].value,
-      password: form[3].value,
-      dateOfBirth: form[4].value,
-      workStation: form[5].value,
+      email: (form[0] as HTMLInputElement).value,
+      name: (form[1] as HTMLInputElement).value,
+      lastName: (form[2] as HTMLInputElement).value,
+      dateOfBirth: (form[3] as HTMLInputElement).value,
+      password: (form[4] as HTMLInputElement).value,
+      workStation: (form[5] as HTMLInputElement).value,
     };
     const response = await fetch(`${apiURL}/users`, {
       method: "POST",

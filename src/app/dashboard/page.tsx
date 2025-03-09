@@ -13,7 +13,7 @@ interface Employee {
   dateOfBirth: string;
   isActive: boolean;
   workStation: string;
-  isEditing?: boolean;
+  isEditing: boolean;
   email: string;
 }
 
@@ -28,7 +28,15 @@ export default function Dashboard() {
   const apiURL = process.env.NEXT_PUBLIC_API_URL;
   const [addEmployee, setAddEmployee] = useState(false);
   const [workStations, setWorkStations] = useState([]);
-  const [employeeMetrics, setEmployeeMetrics] = useState({});
+  interface EmployeeMetrics {
+    employeesActives: number;
+    employeesInactives: number;
+  }
+  
+  const [employeeMetrics, setEmployeeMetrics] = useState<EmployeeMetrics>({
+    employeesActives: 0,
+    employeesInactives: 0,
+  });
 
   const getAllEmployees = async (pageNumber = 1) => {
     let url = `${apiURL}/users?page=${pageNumber}&limit=4`;
@@ -90,16 +98,16 @@ export default function Dashboard() {
     getAllEmployees();
   };
 
-  const submitEmployee = async (e) => {
+  const submitEmployee = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const data = {
-      email: form[0].value,
-      name: form[1].value,
-      lastName: form[2].value,
-      dateOfBirth: form[3].value,
-      password: form[4].value,
-      workStation: form[5].value,
+      email: (form[0] as HTMLInputElement).value,
+      name: (form[1] as HTMLInputElement).value,
+      lastName: (form[2] as HTMLInputElement).value,
+      dateOfBirth: (form[3] as HTMLInputElement).value,
+      password: (form[4] as HTMLInputElement).value,
+      workStation: (form[5] as HTMLInputElement).value,
     };
     const response = await fetch(`${apiURL}/users`, {
       method: "POST",
@@ -127,8 +135,10 @@ export default function Dashboard() {
     }
   };
 
-  const editEmployee = (id) => {
-    const _employees = employees.map((item) => {
+ 
+
+  const editEmployee = (id: string) => {
+    const _employees: Employee[] = employees.map((item) => {
       if (item._id === id) {
         item.isEditing = true;
       }
@@ -137,7 +147,7 @@ export default function Dashboard() {
     setEmployees(_employees);
   };
 
-  const cancelEdit = (id) => {
+  const cancelEdit = (id:string) => {
     const _employees = employees.map((item) => {
       if (item._id === id) {
         item.isEditing = false;
@@ -147,15 +157,15 @@ export default function Dashboard() {
     setEmployees(_employees);
   };
 
-  const updateEmployee = async (e, id) => {
+  const updateEmployee = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const data = {
-      name: form[0].value,
-      lastName: form[1].value,
-      workStation: form[2].value,
-      dateOfBirth: form[3].value,
-      isActive: form[4].value === "Activo" ? true : false,
+      name: (form[0] as HTMLInputElement).value,
+      lastName: (form[1] as HTMLInputElement).value,
+      workStation: (form[2] as HTMLInputElement).value,
+      dateOfBirth: (form[3] as HTMLInputElement).value,
+      isActive: (form[4] as HTMLInputElement).value === "Activo" ? true : false,
     };
     const token = localStorage.getItem("refreshToken");
     const response = await fetch(`${apiURL}/users/${id}`, {
@@ -191,8 +201,8 @@ export default function Dashboard() {
     }
   };
   const [modalDelete, setModalDelete] = useState(false);
-  const [employeeId, setEmployeeId] = useState(null);
-  const deleteEmployee = async (id) => {
+  const [employeeId, setEmployeeId] = useState('');
+  const deleteEmployee = async (id:string) => {
     setModalDelete(true);
     setEmployeeId(id);
   };
@@ -225,7 +235,7 @@ export default function Dashboard() {
       console.error("Error eliminando empleado:", error);
     } finally {
       setModalDelete(false);
-      setEmployeeId(null);
+      setEmployeeId('');
     }
   };
 
