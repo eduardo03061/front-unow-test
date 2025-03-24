@@ -11,7 +11,6 @@ export default function Register() {
   const getAllWorkStations = async () => {
     const response = await fetch(`${apiURL}/workstations`);
     const data = await response.json();
-    console.log("datass", data);
 
     setWorkStations(data?.positions);
   };
@@ -25,11 +24,11 @@ export default function Register() {
 
     const form = e.target as HTMLFormElement;
     const data = {
-      email: (form[0] as HTMLInputElement).value,
-      name: (form[1] as HTMLInputElement).value,
-      lastName: (form[2] as HTMLInputElement).value,
-      dateOfBirth: (form[3] as HTMLInputElement).value,
-      password: (form[4] as HTMLInputElement).value,
+      name: (form[0] as HTMLInputElement).value,
+      lastName: (form[1] as HTMLInputElement).value,
+      email: (form[2] as HTMLInputElement).value,
+      password: (form[3] as HTMLInputElement).value,
+      dateOfBirth: (form[4] as HTMLInputElement).value,
       workStation: (form[5] as HTMLInputElement).value,
     };
     const response = await fetch(`${apiURL}/users`, {
